@@ -1,1 +1,3 @@
-# S2-2019-05-02-Task-3.1
+# Battleships Game
+
+Refer to Wiki for more info
