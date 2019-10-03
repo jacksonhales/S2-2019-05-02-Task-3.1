@@ -106,7 +106,6 @@ public class SeaGrid : ISeaGrid
 	public void MoveShip(int row, int col, ShipName ship, Direction direction)
 	{
 		Ship newShip = _Ships[ship];
-		newShip.Remove();
 		AddShip(row, col, direction, newShip);
 	}
 
@@ -119,14 +118,16 @@ public class SeaGrid : ISeaGrid
 	/// <param name="newShip">the ship</param>
 	private void AddShip(int row, int col, Direction direction, Ship newShip)
 	{
-		try {
+		try
+        {
 			int size = newShip.Size;
 			int currentRow = row;
 			int currentCol = col;
 			int dRow = 0;
 			int dCol = 0;
 
-			if (direction == Direction.LeftRight) {
+			if (direction == Direction.LeftRight)
+            {
 				dRow = 0;
 				dCol = 1;
 			} else {
@@ -136,8 +137,10 @@ public class SeaGrid : ISeaGrid
 
 			//place ship's tiles in array and into ship object
 			int i = 0;
-			for (i = 0; i <= size - 1; i++) {
-				if (currentRow < 0 | currentRow >= Width | currentCol < 0 | currentCol >= Height) {
+			for (i = 0; i <= size - 1; i++)
+            {
+				if (currentRow < 0 || currentRow >= Width || currentCol < 0 || currentCol >= Height)
+                {
 					throw new InvalidOperationException("Ship can't fit on the board");
 				}
 
@@ -147,17 +150,32 @@ public class SeaGrid : ISeaGrid
 				currentRow += dRow;
 			}
 
-			newShip.Deployed(direction, row, col);
-		} catch (Exception e) {
-			newShip.Remove();
+            newShip.Remove();
+
+            currentCol = col;
+            currentRow = row;
+
+            for(i = 0; (i <= (size -1)); i++)
+            {
+                _GameTiles[currentRow, currentCol].Ship = newShip;
+                currentCol += dCol;
+                currentRow += dRow;
+            }
+            newShip.Deployed(direction, row, col);
+		}
+        catch (Exception e)
+        {
+			
 			//if fails remove the ship
 			throw new ApplicationException(e.Message);
 
-		} finally {
-			if (Changed != null) {
-				Changed(this, EventArgs.Empty);
-			}
-		}
+		} finally
+            {
+			    if (Changed != null)
+                {
+				    Changed(this, EventArgs.Empty);
+			    }
+		    }
 	}
 
 	/// <summary>
